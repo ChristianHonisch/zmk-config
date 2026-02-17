@@ -18,7 +18,6 @@ BUILDS := $(shell yq -r '.include[] | ((.shield | split(" ") | .[0]) + "-" + .bo
 
 # Group builds by keyboard prefix
 HSV_BUILDS := $(filter hillside_view_%,$(BUILDS))
-CYG_BUILDS := $(filter cygnus_%,$(BUILDS))
 
 # yq filter: select build.yaml entry by target name (set $$target in shell first)
 YQ_SELECT = .include[] | select(((.shield | split(\" \") | .[0]) + \"-\" + .board) == \"$$target\")
@@ -28,8 +27,6 @@ YQ_SELECT = .include[] | select(((.shield | split(\" \") | .[0]) + \"-\" + .boar
 # =============================================================================
 .PHONY: all list help update clean \
         hsv/all hsv/left hsv/right hsv/upload/left hsv/upload/right \
-        cygnus/all cygnus/left cygnus/right cygnus/dongle \
-        cygnus/upload/left cygnus/upload/right cygnus/upload/dongle \
         modules/setup modules/update modules/clean
 
 all: $(addprefix build/,$(BUILDS))
@@ -100,19 +97,11 @@ upload/%:
 # Aliases
 # =============================================================================
 hsv/all: $(addprefix build/,$(HSV_BUILDS))
-cygnus/all: $(addprefix build/,$(CYG_BUILDS))
 
 hsv/left:           build/hillside_view_left-nice_nano
 hsv/right:          build/hillside_view_right-nice_nano
 hsv/upload/left:    upload/hillside_view_left-nice_nano
 hsv/upload/right:   upload/hillside_view_right-nice_nano
-
-cygnus/left:          build/cygnus_left-nice_nano
-cygnus/right:         build/cygnus_right-nice_nano
-cygnus/dongle:        build/cygnus_dongle-xiao_ble//zmk
-cygnus/upload/left:   upload/cygnus_left-nice_nano
-cygnus/upload/right:  upload/cygnus_right-nice_nano
-cygnus/upload/dongle: upload/cygnus_dongle-xiao_ble//zmk
 
 # =============================================================================
 # List available targets
@@ -123,10 +112,9 @@ list:
 	@echo ""
 	@echo "Groups:"
 	@echo "  hsv/all                 Hillside View builds"
-	@echo "  cygnus/all              Cygnus builds"
 	@echo "  all                     All builds"
 	@echo ""
-	@echo "Upload: replace 'build/' with 'upload/' (e.g. upload/cygnus_left-nice_nano)"
+	@echo "Upload: replace 'build/' with 'upload/' (e.g. upload/hillside_view_left-nice_nano)"
 
 # =============================================================================
 # Maintenance
@@ -194,15 +182,6 @@ help:
 	@echo "  hsv/upload/left         Upload left firmware"
 	@echo "  hsv/upload/right        Upload right firmware"
 	@echo ""
-	@echo "Cygnus:"
-	@echo "  cygnus/all              Build left + right + dongle"
-	@echo "  cygnus/left             Build left (peripheral)"
-	@echo "  cygnus/right            Build right (peripheral)"
-	@echo "  cygnus/dongle           Build dongle (central)"
-	@echo "  cygnus/upload/left      Upload left firmware"
-	@echo "  cygnus/upload/right     Upload right firmware"
-	@echo "  cygnus/upload/dongle    Upload dongle firmware"
-	@echo ""
 	@echo "Modules:"
 	@echo "  modules/setup           Clone external modules from west.yml"
 	@echo "  modules/update          Update all cloned modules"
@@ -216,4 +195,4 @@ help:
 	@echo "        MODULES_DIR=$(MODULES_DIR)"
 	@echo ""
 	@echo "Example: make modules/setup ZMK_ROOT=~/zmk"
-	@echo "         make build/cygnus_left-nice_nano upload/cygnus_left-nice_nano"
+	@echo "         make build/hillside_view_left-nice_nano upload/hillside_view_left-nice_nano"
