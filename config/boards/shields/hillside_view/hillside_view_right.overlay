@@ -60,3 +60,6 @@
 };
 
 // Trackpad is not installed yet on this half; keep split input on shared default.
+&glidepoint_split {
+  status = "disabled";
+};
