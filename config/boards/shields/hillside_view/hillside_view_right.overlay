@@ -53,13 +53,10 @@
 };
 
 &i2c0 {
-  status = "okay";
+  status = "disabled";
   glidepoint0: glidepoint@2a {
-      status = "okay";
+      status = "disabled";
   };
 };
 
-// Override the input-split to reference the physical trackpad device
-&glidepoint_split {
-  device = <&glidepoint0>;
-};
+// Trackpad is not installed yet on this half; keep split input on shared default.
