@@ -43,7 +43,6 @@
 &chosen {
   zephyr,display = &nice_view;
   zephyr,console = &snippet_studio_rpc_usb_uart;
-  zephyr,log-uart = &snippet_studio_rpc_usb_uart;
 };
 
 &nice_view_spi {
