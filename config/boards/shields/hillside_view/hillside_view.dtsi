@@ -173,42 +173,6 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)                                       RC
   };
 };
 
-&i2c0 {
-  status = "disabled";
-  glidepoint0: glidepoint@2a {
-    compatible = "cirque,pinnacle";
-    reg = <0x2a>;
-    status = "disabled";
-    data-ready-gpios = <&gpio1 2 (GPIO_ACTIVE_HIGH)>;
-
-    sensitivity = "1x";
-    sleep-mode-enable;
-    invert-y;
-    // doesn't work for now
-    /* primary-tap-enable; */
-  };
-};
-
-/ {
-  /* Shared input-split configuration for peripheral trackpad */
-  split_inputs {
-    #address-cells = <1>;
-    #size-cells = <0>;
-
-    glidepoint_split: glidepoint_split@0 {
-      compatible = "zmk,input-split";
-      reg = <0>;
-    };
-  };
-
-  /* Input listener for the split trackpad (disabled by default, enabled on central) */
-  tpad_peripheral_listener: tpad_peripheral_listener {
-    compatible = "zmk,input-listener";
-    status = "disabled";
-    device = <&glidepoint_split>;
-  };
-};
-
 nice_view_spi: &spi1 {
   compatible = "nordic,nrf-spim";
   pinctrl-0 = <&spi1_default>;
