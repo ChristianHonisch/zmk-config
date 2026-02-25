@@ -1,3 +1,0 @@
-name: zmk_config_compat
-build:
-  cmake: zephyr

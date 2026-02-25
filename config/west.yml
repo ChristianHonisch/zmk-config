@@ -10,19 +10,14 @@ manifest:
       url-base: https://github.com/mike1808
     - name: janpfischer
       url-base: https://github.com/janpfischer
-    - name: m165437
-      url-base: https://github.com/M165437
   projects:
     - name: zmk
       remote: zmkfirmware
-      revision: main
+      revision: v0.3-branch
       import: app/west.yml
     # - name: zmk-dongle-screen
     #   remote: janpfischer
     #   revision: upgrade-4.1
-    - name: nice-view-gem
-      remote: m165437
-      revision: main
     - name: prospector-zmk-module
       remote: mike1808
       revision: fix/new-status-screan-zmk-refactor
