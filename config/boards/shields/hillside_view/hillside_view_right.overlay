@@ -53,14 +53,3 @@
   status = "okay";
 };
 
-&i2c0 {
-  status = "disabled";
-  glidepoint0: glidepoint@2a {
-      status = "disabled";
-  };
-};
-
-// Trackpad is not installed yet on this half; keep split input on shared default.
-&glidepoint_split {
-  status = "disabled";
-};
