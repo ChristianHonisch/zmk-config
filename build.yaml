@@ -13,11 +13,11 @@
 #
 ---
 include:
-  - board: nice_nano
-    shield: hillside_view_left
+  - board: nice_nano/nrf52840/zmk
+    shield: hillside_view_left nice_view
     snippet: studio-rpc-usb-uart
-  - board: nice_nano
-    shield: hillside_view_right
+  - board: nice_nano/nrf52840/zmk
+    shield: hillside_view_right nice_view
     snippet: studio-rpc-usb-uart
-  - board: nice_nano
+  - board: nice_nano/nrf52840/zmk
     shield: settings_reset
