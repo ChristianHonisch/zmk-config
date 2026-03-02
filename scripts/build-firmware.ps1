@@ -159,10 +159,10 @@ if (-not (Get-Command ninja -ErrorAction SilentlyContinue)) { throw "ninja not f
 
 $targets = @()
 if ($Target -eq "both" -or $Target -eq "left") {
-    $targets += [pscustomobject]@{ TargetName = "hillside_view_left-nice_nano_nrf52840_zmk"; Shield = "hillside_view_left"; Board = "nice_nano/nrf52840/zmk"; Snippet = "studio-rpc-usb-uart" }
+    $targets += [pscustomobject]@{ TargetName = "hillside_view_left-nice_nano_nrf52840_zmk"; Shield = "hillside_view_left nice_view"; Board = "nice_nano/nrf52840/zmk"; Snippet = "studio-rpc-usb-uart" }
 }
 if ($Target -eq "both" -or $Target -eq "right") {
-    $targets += [pscustomobject]@{ TargetName = "hillside_view_right-nice_nano_nrf52840_zmk"; Shield = "hillside_view_right"; Board = "nice_nano/nrf52840/zmk"; Snippet = "" }
+    $targets += [pscustomobject]@{ TargetName = "hillside_view_right-nice_nano_nrf52840_zmk"; Shield = "hillside_view_right nice_view"; Board = "nice_nano/nrf52840/zmk"; Snippet = "" }
 }
 
 foreach ($t in $targets) {
