@@ -1,3 +1,9 @@
 config/_boards
 modules/
 .envrc
+scripts/*.zip
+scripts/*.log
+scripts/__pycache__/
+artifacts/
+logs/
+.opencode/
