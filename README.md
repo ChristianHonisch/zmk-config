@@ -1,7 +1,7 @@
 ZMK keymaps
 ===========
 
-This repo contains configurations for my ZMK based keyboards
+This repo contains ZMK firmware configuration for my split keyboards.
 
 
 ## Hillside View
@@ -12,22 +12,9 @@ This repo contains configurations for my ZMK based keyboards
 
 ### Layout
 
-Made with https://nickcoutsos.github.io/keymap-editor/
+Keymap SVG is rendered via `keymap-drawer` — see `artifacts/keymap-drawer/hillside_view.svg`.
 
-![layer0](./assets/layer0.png)
-![layer1](./assets/layer1.png)
-![layer2](./assets/layer2.png)
-![layer3](./assets/layer3.png)
-![layer4](./assets/layer4.png)
-![layer5](./assets/layer5.png)
+Layers: Base, Num-Sym, Nav, FKeys, Training.
 
-## Corne
-
-![Corne LP](./assets/corne.webp)
-
-Config is located on the [corne branch](https://github.com/mike1808/zmk-config/tree/corne).
-I have removed it from the main branch since I was not using it.
-
-## Charybdis
-
-Charybdis 4x6 with a trackball running pwm3360. 
+German (DE) locale keys via [zmk-locales](https://github.com/joelspadin/zmk-locales).
+Home-row mods using urob-style "timeless" hold-tap configuration.

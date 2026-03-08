@@ -25,7 +25,6 @@
 
 &chosen {
   zephyr,display = &nice_view;
-  // zephyr,console = &snippet_studio_rpc_usb_uart;
 };
 
 // nice view bus

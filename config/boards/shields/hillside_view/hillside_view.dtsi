@@ -20,7 +20,7 @@
   chosen: chosen {
     zmk,kscan = &kscan0;
     zmk,physical-layout = &hsv_6col_layout;
-    zmk,underglow = &led_strip;
+    zmk,underglow = &led_strip;  /* RGB disabled via Kconfig; available if enabled */
   };
 
   default_transform: keymap_transform_0 {
@@ -74,6 +74,7 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)                                       RC
 
   };
 
+  /* Encoders are disabled; sensor node kept for future use */
   sensors {
     compatible = "zmk,keymap-sensors";
     sensors = <&left_encoder &right_encoder>;

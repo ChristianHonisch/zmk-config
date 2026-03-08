@@ -22,9 +22,9 @@ manifest:
     #   revision: upgrade-4.1
     - name: prospector-zmk-module
       remote: mike1808
-      revision: fix/new-status-screan-zmk-refactor
+      revision: f117cd8d65da2c6c46f80d5293aac78362ae35a8
     - name: zmk-locales
       remote: joelspadin
-      revision: main
+      revision: be0427eaa80c7bb9a3d74ab11a78d53b98f5c5aa
   self:
     path: config

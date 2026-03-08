@@ -1,12 +1,13 @@
 # AGENTS.md
 Guidance for coding agents operating in this repository.
 This repository is a ZMK firmware config workspace for split keyboards.
-Primary keyboards are Hillside View and Cygnus.
+Primary keyboard is Hillside View.
 
 ## Scope and source of truth
 - `build.yaml` is the source of truth for build targets.
 - `config/` is the source of truth for keymaps, board overlays, and Kconfig options.
-- `Makefile` provides local build/upload orchestration.
+- `Makefile` provides local build/upload orchestration (Linux).
+- `scripts/build-firmware.ps1` provides local build orchestration (Windows).
 - CI behavior is defined in `.github/workflows/build-user-config.yml`.
 - External module dependencies are declared in `config/west.yml`.
 
@@ -21,7 +22,7 @@ Primary keyboards are Hillside View and Cygnus.
 - Typical build execution directory is `${ZMK_ROOT}/app`.
 - Python venv is expected at `${ZMK_ROOT}/.venv`.
 - Required tools: `west`, `yq`, and standard shell tools.
-- Upload helpers in Makefile assume Linux-style storage tooling.
+- Upload helpers in Makefile assume Linux-style storage tooling (not available on Windows).
 - Treat `C:\ncs\...` toolchain installs as immutable: do not run `pip install`, upgrade packages, or otherwise modify that environment.
 
 ## Build, lint, and test commands
@@ -29,38 +30,45 @@ There is no dedicated unit-test suite in this repo.
 There is no standalone lint pipeline in this repo.
 Validation is performed by building the relevant firmware target(s).
 
-### Setup commands
+### Windows build (primary workflow)
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-firmware.ps1 -Target left
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-firmware.ps1 -Target right
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-firmware.ps1 -Target both
+```
+Board qualifier: `nice_nano/nrf52840/zmk`. Shield compounds include `nice_view`.
+
+### Windows flash
+```powershell
+.venv-tools\Scripts\python.exe -I -m nordicsemi dfu serial -pkg scripts\hillside_view_left-nice_nano_nrf52840_zmk-zmk-dfu.zip -p COM27 -b 115200
+.venv-tools\Scripts\python.exe -I -m nordicsemi dfu serial -pkg scripts\hillside_view_right-nice_nano_nrf52840_zmk-zmk-dfu.zip -p COM6 -b 115200
+```
+Flash order: left first, then right. Boot order: left first, wait 5-10s, then right.
+
+### Setup commands (Linux/Makefile)
 - `make modules/setup ZMK_ROOT=~/path/to/zmk`
   - Clones external modules from `config/west.yml` into `./modules`.
 - `make list`
   - Prints all available build targets parsed from `build.yaml`.
 
-### Build commands
+### Build commands (Linux/Makefile)
 - Build all: `make all ZMK_ROOT=~/path/to/zmk`
-- Hillside group: `make hsv/all ZMK_ROOT=~/path/to/zmk`
-- Cygnus group: `make cygnus/all ZMK_ROOT=~/path/to/zmk`
 - Hillside left: `make hsv/left ZMK_ROOT=~/path/to/zmk`
 - Hillside right: `make hsv/right ZMK_ROOT=~/path/to/zmk`
-- Cygnus left: `make cygnus/left ZMK_ROOT=~/path/to/zmk`
-- Cygnus right: `make cygnus/right ZMK_ROOT=~/path/to/zmk`
-- Cygnus dongle: `make cygnus/dongle ZMK_ROOT=~/path/to/zmk`
 
 ### Single-test equivalent (most important)
 Use a single target build as the equivalent of running one focused test:
 - `make build/hillside_view_left-nice_nano ZMK_ROOT=~/path/to/zmk`
 - `make build/hillside_view_right-nice_nano ZMK_ROOT=~/path/to/zmk`
-- `make build/cygnus_left-nice_nano ZMK_ROOT=~/path/to/zmk`
-- `make build/cygnus_right-nice_nano ZMK_ROOT=~/path/to/zmk`
-- `make build/cygnus_dongle-xiao_ble//zmk ZMK_ROOT=~/path/to/zmk`
 
 ### Manual west build (advanced)
 Run from `${ZMK_ROOT}/app` with venv activated:
 
 ```bash
-west build -p -d build/hsv/left -b nice_nano \
-  -- -DSHIELD="hillside_view_left" \
+west build -p -d build/hsv/left -b nice_nano/nrf52840/zmk \
+  -- -DSHIELD="hillside_view_left nice_view" \
      -DZMK_CONFIG=/abs/path/to/zmk-config/config \
-     -DZMK_EXTRA_MODULES="/abs/path/to/zmk-config/modules/prospector-zmk-module"
+     -DZMK_EXTRA_MODULES="/abs/path/to/zmk-config/modules/prospector-zmk-module;/abs/path/to/zmk-config/modules/zmk-locales"
 ```
 
 ### Lint/static checks
@@ -68,12 +76,9 @@ west build -p -d build/hsv/left -b nice_nano \
 - Treat successful `west build` as syntax/compat validation for DTS/keymap/Kconfig edits.
 - For YAML edits, optionally run a parse check with `yq`.
 
-### Upload commands
+### Upload commands (Linux/Makefile)
 - `make upload/hillside_view_left-nice_nano ZMK_ROOT=~/path/to/zmk`
 - `make upload/hillside_view_right-nice_nano ZMK_ROOT=~/path/to/zmk`
-- `make upload/cygnus_left-nice_nano ZMK_ROOT=~/path/to/zmk`
-- `make upload/cygnus_right-nice_nano ZMK_ROOT=~/path/to/zmk`
-- `make upload/cygnus_dongle-xiao_ble//zmk ZMK_ROOT=~/path/to/zmk`
 
 ## Code style guidelines
 
@@ -129,13 +134,13 @@ west build -p -d build/hsv/left -b nice_nano \
 
 ## Validation expectations
 - Keymap-only change: build at least the affected single target.
-- Overlay/dtsi change: build all affected variants for that keyboard.
-- Shared config change: build at least one Hillside and one Cygnus target.
+- Overlay/dtsi change: build all affected variants (left + right).
+- Shared config change: build both left and right targets.
 - Build matrix change: run `make list` and build new/changed target(s).
 
 ## Quick checklist for agents
 - Confirm no Cursor/Copilot rule files were added since last scan.
-- Identify affected keyboard(s), side(s), and layer(s) before editing.
+- Identify affected side(s) and layer(s) before editing.
 - Apply minimal edits consistent with local formatting and naming.
 - Run focused single-target build(s) first.
 - Expand to broader builds when changes affect shared paths.
