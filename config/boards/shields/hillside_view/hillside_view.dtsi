@@ -190,7 +190,3 @@ nice_view_spi: &spi1 {
     height = <68>;
   };
 };
-
-&uicr {
-  nfct-pins-as-gpios;
-};

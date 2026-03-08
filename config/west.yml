@@ -10,6 +10,8 @@ manifest:
       url-base: https://github.com/mike1808
     - name: janpfischer
       url-base: https://github.com/janpfischer
+    - name: joelspadin
+      url-base: https://github.com/joelspadin
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -21,5 +23,8 @@ manifest:
     - name: prospector-zmk-module
       remote: mike1808
       revision: fix/new-status-screan-zmk-refactor
+    - name: zmk-locales
+      remote: joelspadin
+      revision: main
   self:
     path: config

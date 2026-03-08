@@ -47,14 +47,17 @@ Validation is performed by building the relevant firmware target(s).
 
 ### Single-test equivalent (most important)
 Use a single target build as the equivalent of running one focused test:
-- `make build/hillside_view_left-nice_nano/nrf52840/zmk ZMK_ROOT=~/path/to/zmk`
-- `make build/hillside_view_right-nice_nano/nrf52840/zmk ZMK_ROOT=~/path/to/zmk`
+- `make build/hillside_view_left-nice_nano ZMK_ROOT=~/path/to/zmk`
+- `make build/hillside_view_right-nice_nano ZMK_ROOT=~/path/to/zmk`
+- `make build/cygnus_left-nice_nano ZMK_ROOT=~/path/to/zmk`
+- `make build/cygnus_right-nice_nano ZMK_ROOT=~/path/to/zmk`
+- `make build/cygnus_dongle-xiao_ble//zmk ZMK_ROOT=~/path/to/zmk`
 
 ### Manual west build (advanced)
 Run from `${ZMK_ROOT}/app` with venv activated:
 
 ```bash
-west build -p -d build/hsv/left -b nice_nano/nrf52840/zmk \
+west build -p -d build/hsv/left -b nice_nano \
   -- -DSHIELD="hillside_view_left" \
      -DZMK_CONFIG=/abs/path/to/zmk-config/config \
      -DZMK_EXTRA_MODULES="/abs/path/to/zmk-config/modules/prospector-zmk-module"
@@ -66,8 +69,11 @@ west build -p -d build/hsv/left -b nice_nano/nrf52840/zmk \
 - For YAML edits, optionally run a parse check with `yq`.
 
 ### Upload commands
-- `make upload/hillside_view_left-nice_nano/nrf52840/zmk ZMK_ROOT=~/path/to/zmk`
-- `make upload/hillside_view_right-nice_nano/nrf52840/zmk ZMK_ROOT=~/path/to/zmk`
+- `make upload/hillside_view_left-nice_nano ZMK_ROOT=~/path/to/zmk`
+- `make upload/hillside_view_right-nice_nano ZMK_ROOT=~/path/to/zmk`
+- `make upload/cygnus_left-nice_nano ZMK_ROOT=~/path/to/zmk`
+- `make upload/cygnus_right-nice_nano ZMK_ROOT=~/path/to/zmk`
+- `make upload/cygnus_dongle-xiao_ble//zmk ZMK_ROOT=~/path/to/zmk`
 
 ## Code style guidelines
 
@@ -126,10 +132,6 @@ west build -p -d build/hsv/left -b nice_nano/nrf52840/zmk \
 - Overlay/dtsi change: build all affected variants for that keyboard.
 - Shared config change: build at least one Hillside and one Cygnus target.
 - Build matrix change: run `make list` and build new/changed target(s).
-
-## Known bugs and investigation logs
-- **Deep sleep wake failure on central half**: See `docs/bug-deep-sleep-wake.md`.
-  Do NOT re-test any approach listed as "Ruled Out" without new evidence.
 
 ## Quick checklist for agents
 - Confirm no Cursor/Copilot rule files were added since last scan.
