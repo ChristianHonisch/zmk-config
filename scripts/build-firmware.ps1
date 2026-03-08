@@ -81,7 +81,7 @@ function Invoke-ZmkBuild {
         [Parameter(Mandatory = $true)][string]$TargetName,
         [Parameter(Mandatory = $true)][string]$Shield,
         [Parameter(Mandatory = $true)][string]$Board,
-        [string]$Snippet
+        [Parameter(Mandatory = $true)][string]$Snippet
     )
 
     $buildDir = Join-Path $ZmkApp "build\$TargetName"
@@ -91,11 +91,7 @@ function Invoke-ZmkBuild {
     }
 
     $configPathCMake = Convert-ToCMakePath $ConfigPath
-    $westArgs = @("-m", "west", "build", "-p", "-d", $buildDir, "-b", $Board)
-    if ($Snippet) {
-        $westArgs += @("-S", $Snippet)
-    }
-    $westArgs += @("--", "-DSHIELD=$Shield", "-DZMK_CONFIG=$configPathCMake")
+    $westArgs = @("-m", "west", "build", "-p", "-d", $buildDir, "-b", $Board, "-S", $Snippet, "--", "-DSHIELD=$Shield", "-DZMK_CONFIG=$configPathCMake")
     if ($moduleDirs.Count -gt 0) {
         $extraModules = ($moduleDirs | ForEach-Object { Convert-ToCMakePath $_ }) -join ";"
         $westArgs += "-DZMK_EXTRA_MODULES=$extraModules"
@@ -159,10 +155,10 @@ if (-not (Get-Command ninja -ErrorAction SilentlyContinue)) { throw "ninja not f
 
 $targets = @()
 if ($Target -eq "both" -or $Target -eq "left") {
-    $targets += [pscustomobject]@{ TargetName = "hillside_view_left-nice_nano_nrf52840_zmk"; Shield = "hillside_view_left nice_view"; Board = "nice_nano/nrf52840/zmk"; Snippet = "studio-rpc-usb-uart" }
+    $targets += [pscustomobject]@{ TargetName = "hillside_view_left-nice_nano_nrf52840_zmk"; Shield = "hillside_view_left nice_view"; Board = "nice_nano/nrf52840/zmk"; Snippet = "zmk-usb-logging" }
 }
 if ($Target -eq "both" -or $Target -eq "right") {
-    $targets += [pscustomobject]@{ TargetName = "hillside_view_right-nice_nano_nrf52840_zmk"; Shield = "hillside_view_right nice_view"; Board = "nice_nano/nrf52840/zmk"; Snippet = "" }
+    $targets += [pscustomobject]@{ TargetName = "hillside_view_right-nice_nano_nrf52840_zmk"; Shield = "hillside_view_right nice_view"; Board = "nice_nano/nrf52840/zmk"; Snippet = "studio-rpc-usb-uart" }
 }
 
 foreach ($t in $targets) {

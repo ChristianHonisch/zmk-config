@@ -1,7 +1,9 @@
 param(
     [string]$LeftComPort = "COM27",
     [string]$RightComPort = "COM6",
-    [int]$BaudRate = 115200
+    [int]$BaudRate = 115200,
+    [int]$Touch = 1200,
+    [switch]$NoTouch
 )
 
 $ErrorActionPreference = "Stop"
@@ -9,9 +11,9 @@ $ErrorActionPreference = "Stop"
 $ResetZip = "settings_reset-nice_nano-zmk-dfu.zip"
 
 $RepoRoot = Split-Path $PSScriptRoot -Parent
-$VenvPython = Join-Path $RepoRoot ".venv-tools\Scripts\python.exe"
-if (-not (Test-Path $VenvPython)) {
-    throw "venv python not found: $VenvPython"
+$NrfUtil = Join-Path $RepoRoot ".venv-tools\Scripts\adafruit-nrfutil.exe"
+if (-not (Test-Path $NrfUtil)) {
+    throw "adafruit-nrfutil not found in repo venv: $NrfUtil"
 }
 
 function Invoke-DfuFlash {
@@ -27,14 +29,18 @@ function Invoke-DfuFlash {
 
     Write-Host "Flashing $ZipFile -> $ComPort" -ForegroundColor Cyan
     $args = @(
-        "-I", "-m", "nordicsemi",
-        "dfu", "serial",
-        "-pkg", "$zipPath",
+        "--verbose", "dfu", "serial",
+        "--package", "$zipPath",
         "-p", $ComPort,
-        "-b", "$BaudRate"
+        "-b", "$BaudRate",
+        "--singlebank"
     )
 
-    & $VenvPython @args
+    if (-not $NoTouch) {
+        $args += @("--touch", "$Touch")
+    }
+
+    & $NrfUtil @args
 
     if ($LASTEXITCODE -ne 0) {
         throw "Flashing failed for $ComPort"
