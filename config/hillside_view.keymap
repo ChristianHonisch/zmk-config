@@ -88,8 +88,8 @@
             display-name = "Base";
             bindings = <
 &kp ESCAPE  &kp DE_Q            &kp DE_W           &kp DE_E            &kp DE_R           &kp DE_T                                                                     &kp DE_Z       &kp DE_U            &kp DE_I             &kp DE_O           &kp DE_P               &kp DE_U_UMLAUT
-&kp TAB     &hml LCTRL DE_A     &hml LALT DE_S     &hml LSHFT DE_D     &hml LGUI DE_F     &kp DE_G                                                                     &kp DE_H       &hmr RGUI DE_J      &hmr RSHFT DE_K      &hmr RALT DE_L     &hmr RCTRL DE_O_UMLAUT &kp DE_A_UMLAUT
-&trans      &kp DE_Y            &kp DE_X           &kp DE_C            &kp DE_V           &kp DE_B                                                                     &kp DE_N       &kp DE_M            &kp DE_COMMA         &kp DE_DOT         &kp DE_MINUS           &kp DE_SZ
+&kp TAB     &hml LGUI DE_A      &hml LALT DE_S     &hml LSHFT DE_D     &hml LCTRL DE_F    &kp DE_G                                                                     &kp DE_H       &hmr RCTRL DE_J     &hmr RSHFT DE_K      &hmr RALT DE_L     &hmr RGUI DE_O_UMLAUT  &kp DE_A_UMLAUT
+&trans      &kp DE_Y            &hml RALT DE_X           &kp DE_C            &kp DE_V           &kp DE_B                                                                     &kp DE_N       &kp DE_M            &kp DE_COMMA         &kp DE_DOT         &kp DE_MINUS           &kp DE_SZ
             &trans              &trans             &trans              &mo NUM            &kp RETURN        &kp BACKSPACE      &kp DELETE     &kp SPACE                  &mo NAV        &trans
             >;
         };
@@ -98,7 +98,7 @@
             display-name = "Num-Sym";
             bindings = <
 &bt BT_SEL 0  &kp DE_CARET  &kp DE_ACUTE   &mod_bt        &kp DE_TILDE  &none                                                       &kp DE_BSLH              &kp DE_N7          &kp DE_N8          &kp DE_N9          &kp DE_FSLH            &none
-&none         &hml LCTRL DE_LBKT  &hml LALT DE_LBRC  &hml LSHFT DE_LPAR  &hml LGUI DE_LT  &none                                            &kp DE_PIPE              &hmr RGUI DE_N4    &hmr RSHFT DE_N5   &hmr RALT DE_N6    &hmr RCTRL DE_PLUS     &none
+&none         &hml LGUI DE_LBKT   &hml LALT DE_LBRC  &hml LSHFT DE_LPAR  &hml LCTRL DE_LT &none                                            &kp DE_PIPE              &hmr RCTRL DE_N4   &hmr RSHFT DE_N5   &hmr RALT DE_N6    &hmr RGUI DE_PLUS      &none
 &none         &kp DE_RBKT   &kp DE_RBRC   &kp DE_RPAR   &kp DE_GT     &none                                                               &kp DE_HASH              &kp DE_N1          &kp DE_N2          &kp DE_N3          &kp DE_ASTRK           &none
               &none         &none         &none         &none         &none             &none              &kp DE_DOT     &kp DE_COMMA       &kp DE_N0                &none
             >;
@@ -108,7 +108,7 @@
             display-name = "Nav";
             bindings = <
 &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                                                        &out OUT_TOG  &kp HOME   &kp PG_UP  &kp PG_DN  &kp END    &trans
-&trans      &kp LCTRL     &kp LALT      &kp LSHFT     &kp LGUI      &trans                                                              &kp SPACE     &kp LEFT   &kp UP     &kp DOWN   &kp RIGHT  &trans
+&trans      &kp LGUI      &kp LALT      &kp LSHFT     &kp LCTRL     &trans                                                              &kp SPACE     &kp LEFT   &kp UP     &kp DOWN   &kp RIGHT  &trans
 &tog TRN    &trans        &trans        &trans        &trans        &trans                                                              &trans        &trans     &trans     &trans     &trans     &trans
             &trans        &trans        &trans        &trans        &trans            &trans             &trans         &trans            &trans        &trans
             >;
@@ -118,7 +118,7 @@
             display-name = "FKeys";
             bindings = <
 &trans  &trans     &trans     &trans      &trans     &trans                                                          &trans  &kp F7  &kp F8  &kp F9  &kp F12  &trans
-&trans  &kp LCTRL  &kp LALT   &kp LSHFT   &kp LGUI   &trans                                                          &trans  &kp F4  &kp F5  &kp F6  &kp F11  &trans
+&trans  &kp LGUI   &kp LALT   &kp LSHFT   &kp LCTRL  &trans                                                          &trans  &kp F4  &kp F5  &kp F6  &kp F11  &trans
 &trans  &trans  &trans  &trans  &trans  &trans                                                          &trans  &kp F1  &kp F2  &kp F3  &kp F10  &trans
         &trans  &trans  &trans  &trans  &trans          &trans             &trans         &trans         &trans  &trans
             >;
