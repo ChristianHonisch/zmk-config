@@ -72,4 +72,4 @@ Bluetooth serial ports (COM25, COM26) are always present and unrelated to USB.
 
 - Foxconn / Hon Hai MediaTek MT7921 (USB VID 0489, PID E0CD)
 - BLE 5.x, supports LE Secure Connections
-- PC BT MAC: `<PC_BT_MAC>`
+- PC BT MAC: stored privately in `secrets/bluetooth.md`

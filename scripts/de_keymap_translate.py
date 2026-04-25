@@ -21,7 +21,7 @@ import re
 DE_LEGEND_MAP = {
     # --- Legacy mappings (standard ZMK keycode legends) ---
     "Sft+!": "!",
-    "Sft+\"": "\"",
+    'Sft+"': '"',
     "Sft+$": "$",
     "Sft+%": "%",
     "Sft+&": "&",
@@ -176,11 +176,20 @@ DE_LEGEND_MAP = {
     "&bktk": "`",
     "&tbtk": "```",
     "&mod_bt": "`",
+    "&grimacing": "😬",
+    "&uc 0x1F62C 0": "😬",
+    "&uc 0x1F600 0": "😀",
 }
 
 
 def translate_legend_de(label: str) -> str:
     """Translate one rendered legend label to de-DE output."""
+    uc_match = re.match(r"^&uc\s+0x([0-9A-Fa-f]+)\s+0$", label)
+    if uc_match:
+        codepoint = int(uc_match.group(1), 16)
+        if 0 <= codepoint <= 0x10FFFF:
+            return chr(codepoint)
+
     result = DE_LEGEND_MAP.get(label)
     if result is not None:
         return result
@@ -210,7 +219,6 @@ def _translate_scalar_token(token: str) -> str:
     translated = translate_legend_de(value)
     if translated == value:
         return token
-    # Always quote translated values to keep YAML parsing stable.
     return _quote_single(translated)
 
 
@@ -242,7 +250,6 @@ def _split_inline_list(content: str) -> list[str]:
 
 
 def _translate_inline_list_item(token: str) -> str:
-    """Translate an inline list item and inject shifted label if applicable."""
     translated = _translate_scalar_token(token)
     value, _, _ = _parse_scalar(translated)
     shifted = DE_SHIFT_MAP.get(value)
@@ -259,7 +266,7 @@ def _translate_inline_list_line(line: str) -> str:
     inner = line[start + 1 : end]
     items = _split_inline_list(inner)
     translated_items = [_translate_inline_list_item(item) for item in items]
-    return f"{line[:start + 1]}{', '.join(translated_items)}{line[end:]}"
+    return f"{line[: start + 1]}{', '.join(translated_items)}{line[end:]}"
 
 
 def _translate_inline_map_fields(line: str) -> str:
@@ -271,11 +278,10 @@ def _translate_inline_map_fields(line: str) -> str:
     line = re.sub(r"(\bt:\s*)([^,}]+)", repl, line)
     line = re.sub(r"(\bh:\s*)([^,}]+)", repl, line)
     line = re.sub(r"(\bs:\s*)([^,}]+)", repl, line)
+    line = re.sub(r"(\bk:\s*)([^,}]+)", repl, line)
     return line
 
 
-# German Shift variants: base character -> shifted character
-# Used to inject "s:" (shifted) labels in keymap-drawer YAML
 DE_SHIFT_MAP = {
     ",": ";",
     ".": ":",
@@ -300,33 +306,20 @@ DE_SHIFT_MAP = {
 
 
 def _inject_shifted_label(line: str) -> str:
-    """Inject s: (shifted) label for keys with known DE shift variants.
-
-    Transforms simple scalar entries like:
-        - ','       ->  {t: ',', s: ';'}
-    And inline map entries like:
-        {t: ',', h: LALT}  ->  {t: ',', s: ';', h: LALT}
-
-    Only injects if no s: field already exists.
-    """
-    # Skip lines that already have an s: field
     if re.search(r"\bs:", line):
         return line
 
-    # Handle inline map: {t: 'value', ...}
     m = re.search(r"\{[^}]*\bt:\s*([^,}]+)", line)
     if m:
         tap_token = m.group(1).strip()
         tap_value, _, _ = _parse_scalar(tap_token)
         shifted = DE_SHIFT_MAP.get(tap_value)
         if shifted:
-            # Insert s: after t: value
             insert_pos = m.end()
             s_field = f", s: {_quote_single(shifted)}"
             return line[:insert_pos] + s_field + line[insert_pos:]
         return line
 
-    # Handle simple scalar: - 'value' or - value (not a map/list)
     block_m = re.match(r"^(\s*-\s+)(.+)$", line)
     if block_m:
         prefix = block_m.group(1)
@@ -341,30 +334,21 @@ def _inject_shifted_label(line: str) -> str:
     return line
 
 
-# Layer index -> display name mapping.
-# keymap-drawer can't resolve #define'd layer indices back to names,
-# so &mo NAV (with #define NAV 2) renders as &mo 2 and the layer is
-# named '2' in the YAML.  This map fixes that.
 LAYER_INDEX_MAP = {
     "2": "Nav",
 }
 
 
 def _fix_layer_indices(yaml_text: str) -> str:
-    """Rename numeric layer keys and references caused by CPP #define resolution."""
     lines = yaml_text.splitlines()
     out: list[str] = []
     for line in lines:
-        # Fix top-level layer key:  "  '2':" -> "  Nav:"
         for idx, name in LAYER_INDEX_MAP.items():
             pattern = f"  '{idx}':"
             if line.startswith(pattern):
-                line = f"  {name}:" + line[len(pattern):]
+                line = f"  {name}:" + line[len(pattern) :]
                 break
-        # Fix standalone layer reference in key bindings:  "- '2'" or "- 2"
-        # that would otherwise be treated as a digit and get shift-injected.
         for idx, name in LAYER_INDEX_MAP.items():
-            # Block item: "    - '2'" or "    - 2"
             m = re.match(rf"^(\s*-\s+)'{idx}'(\s*)$", line)
             if m:
                 line = f"{m.group(1)}{name}{m.group(2)}"
@@ -378,8 +362,6 @@ def _fix_layer_indices(yaml_text: str) -> str:
 
 
 def translate_keymap_yaml_de(yaml_text: str) -> str:
-    """Translate keymap-drawer YAML content to de-DE legends."""
-    # First pass: fix numeric layer indices before any legend translation
     yaml_text = _fix_layer_indices(yaml_text)
 
     out_lines: list[str] = []
@@ -396,19 +378,21 @@ def translate_keymap_yaml_de(yaml_text: str) -> str:
             prefix = block_item.group(1)
             value = block_item.group(2).rstrip()
             stripped = value.strip()
-            if stripped and not stripped.startswith("{") and not stripped.startswith("["):
+            if (
+                stripped
+                and not stripped.startswith("{")
+                and not stripped.startswith("[")
+            ):
                 translated_value = _translate_scalar_token(stripped)
                 translated = f"{prefix}{translated_value}"
 
         translated = _inject_shifted_label(translated)
-
         out_lines.append(translated)
 
     return "\n".join(out_lines) + "\n"
 
 
 def translate_keymap_yaml_file_de(path: Path) -> None:
-    """Translate a keymap-drawer YAML file in place."""
     original = path.read_text(encoding="utf-8")
     translated = translate_keymap_yaml_de(original)
     path.write_text(translated, encoding="utf-8")

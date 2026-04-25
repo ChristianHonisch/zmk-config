@@ -1,6 +1,9 @@
 config/_boards
 modules/
 .envrc
+*.etl
+*.wprp
+secrets/
 .venv-tools/
 .opencode/
 scripts/*.zip

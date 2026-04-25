@@ -1,0 +1,89 @@
+ZMK config repo
+- C:\Daten\GIT\zmk-config\build.yaml
+  - edited to make left use zmk-usb-logging and right use no snippet
+- C:\Daten\GIT\zmk-config\scripts\build-firmware.ps1
+  - edited to support optional snippet and match cleaned-up build policy
+- C:\Daten\GIT\zmk-config\scripts\flash-firmware.ps1
+  - previously edited to match actual DFU output names
+- C:\Daten\GIT\zmk-config\build-instructions.md
+  - edited to reflect current build targets and artifact names
+- C:\Daten\GIT\zmk-config\flashing-instructions.md
+  - edited earlier to reflect actual DFU zip names and -NoTouch note
+- C:\Daten\GIT\zmk-config\SCRIPT-INFO.md
+  - created; documents scripts and parameters
+- C:\Daten\GIT\zmk-config\bt-disconnect-error.md
+  - read; contains current disconnect investigation status
+- C:\Daten\GIT\zmk-config\temporary_changes.md
+  - read; describes prior temporary logging/studio changes
+- C:\Daten\GIT\zmk-config\KNOWLEDGE.md
+  - read; contains known-good build notes and PC adapter MAC
+Keyboard config / overlays
+- C:\Daten\GIT\zmk-config\config\hillside_view.keymap
+  - read multiple times; current combos/layers context
+- C:\Daten\GIT\zmk-config\config\hillside_view.conf
+  - read for current shared config
+- C:\Daten\GIT\zmk-config\config\boards\shields\hillside_view\hillside_view_left.conf
+  - edited to add aggressive left-only logging; should likely be reverted next
+- C:\Daten\GIT\zmk-config\config\boards\shields\hillside_view\hillside_view_right.overlay
+  - edited to remove stale snippet_studio_rpc_usb_uart console reference
+- C:\Daten\GIT\zmk-config\config\boards\shields\hillside_view\hillside_view_left.overlay
+  - read while checking snippet/logging interaction
+- C:\Daten\GIT\zmk-config\config\boards\shields\hillside_view\hillside_view.dtsi
+  - read while checking display/status context
+- C:\Daten\GIT\zmk-config\config\boards\shields\hillside_view\layouts.dtsi
+  - read while checking display/layout context
+ZMK source tree
+- C:\Daten\GIT\zmk\app\snippets\zmk-usb-logging\zmk-usb-logging.conf
+  - read
+- C:\Daten\GIT\zmk\app\snippets\zmk-usb-logging\zmk-usb-logging.overlay
+  - read
+- C:\Daten\GIT\zmk\app\snippets\studio-rpc-usb-uart\snippet.yml
+  - read
+- C:\Daten\GIT\zmk\app\snippets\studio-rpc-usb-uart\studio-rpc-usb-uart.conf
+  - read
+- C:\Daten\GIT\zmk\app\snippets\studio-rpc-usb-uart\studio-rpc-usb-uart.overlay
+  - read
+- C:\Daten\GIT\zmk\app\src\ble.c
+  - read for host BLE connection/disconnection behavior
+- C:\Daten\GIT\zmk\app\src\split\central.c
+  - read for transport state behavior
+- C:\Daten\GIT\zmk\app\src\split\bluetooth\central.c
+  - heavily read for split disconnect/slot-release behavior
+- C:\Daten\GIT\zmk\app\src\split\bluetooth\peripheral.c
+  - read for split peripheral disconnect behavior
+- C:\Daten\GIT\zmk\app\src\split\bluetooth\service.c
+  - read for split GATT notify behavior
+- C:\Daten\GIT\zmk\app\src\split\bluetooth\central_bas_proxy.c
+  - read for BAS behavior
+- C:\Daten\GIT\zmk\app\src\display\status_screen.c
+  - read for widget layout
+- C:\Daten\GIT\zmk\app\src\display\widgets\output_status.c
+  - read; host/output BLE display logic
+- C:\Daten\GIT\zmk\app\src\display\widgets\peripheral_status.c
+  - read; split peripheral status display logic
+- C:\Daten\GIT\zmk\app\boards\shields\nice_view\widgets\status.c
+  - read for nice!view output status behavior
+- C:\Daten\GIT\zmk\app\Kconfig
+  - read for logging options
+- C:\Daten\GIT\zmk\zephyr\subsys\bluetooth\common\Kconfig
+  - read for BT monitor/debug options
+- C:\Daten\GIT\zmk\zephyr\subsys\bluetooth\host\conn.c
+  - read to confirm Zephyr BT conn logging usage
+Logs / artifacts
+- C:\Daten\GIT\zmk-config\logs\
+  - multiple logs read/grepped, especially:
+  - synchronous-log-20260419-211941.log
+  - synchronous-log-20260419-213425.log
+  - synchronous-log-20260419-213632.log
+  - ht-log-20260421-220211.log
+External keylogger repo
+- C:\Daten\Daten_B\python\sandbox\keylogger\
+  - inspected for counts/raw data
+- C:\Daten\Daten_B\python\sandbox\keylogger\key_counts_hs46.json
+  - read for Enter vs inferred Sym usage
+- C:\Daten\Daten_B\python\sandbox\keylogger\key_raw_hs46.jsonl
+  - read to confirm raw logging format
+- C:\Daten\Daten_B\python\sandbox\keylogger\analysis\keymaps\hillside_view.json
+  - read to infer Num-Sym-only outputs
+- C:\Daten\Daten_B\python\sandbox\keylogger\AGENTS.md
+  - read to understand keylogger repo structure

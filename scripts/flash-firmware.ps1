@@ -8,8 +8,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$LeftZip = "hillside_view_left-nice_nano-zmk-dfu.zip"
-$RightZip = "hillside_view_right-nice_nano-zmk-dfu.zip"
+$LeftZip = "hillside_view_left-nice_nano_nrf52840_zmk-zmk-dfu.zip"
+$RightZip = "hillside_view_right-nice_nano_nrf52840_zmk-zmk-dfu.zip"
 
 $RepoRoot = Split-Path $PSScriptRoot -Parent
 $NrfUtil = Join-Path $RepoRoot ".venv-tools\Scripts\adafruit-nrfutil.exe"

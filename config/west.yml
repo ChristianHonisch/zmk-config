@@ -12,6 +12,8 @@ manifest:
       url-base: https://github.com/janpfischer
     - name: joelspadin
       url-base: https://github.com/joelspadin
+    - name: urob
+      url-base: https://github.com/urob
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -26,5 +28,8 @@ manifest:
     - name: zmk-locales
       remote: joelspadin
       revision: be0427eaa80c7bb9a3d74ab11a78d53b98f5c5aa
+    - name: zmk-unicode
+      remote: urob
+      revision: v0.3
   self:
     path: config

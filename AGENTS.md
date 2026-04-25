@@ -6,10 +6,36 @@ Primary keyboard is Hillside View.
 ## Scope and source of truth
 - `build.yaml` is the source of truth for build targets.
 - `config/` is the source of truth for keymaps, board overlays, and Kconfig options.
-- `Makefile` provides local build/upload orchestration (Linux).
-- `scripts/build-firmware.ps1` provides local build orchestration (Windows).
+- `Makefile` provides local build/upload orchestration.
 - CI behavior is defined in `.github/workflows/build-user-config.yml`.
 - External module dependencies are declared in `config/west.yml`.
+
+## Private information
+- Store private or machine-specific information that must not be published, such as MAC addresses, adapter IDs, host identifiers, local paths with personal data, and trace details, only under `secrets/`.
+- `secrets/` is intentionally ignored by Git and must never be committed, quoted into public docs, issue reports, commit messages, or logs intended for GitHub.
+- Public docs may refer to sanitized placeholders such as `<PC_BT_MAC>` or `<keyboard_addr>`.
+- If private information is already present in tracked docs, move it to `secrets/` and replace it with a sanitized placeholder.
+
+## Important repository docs
+- `README.md` provides a high-level repository and keyboard overview.
+- `build-instructions.md` is the authoritative local build procedure and build verification guide.
+- `flashing-instructions.md` is the authoritative flashing/reset procedure and post-flash validation guide.
+- `SCRIPT-INFO.md` summarizes available scripts, parameters, and typical workflows.
+- `TODO.md` is the current backlog for follow-up work; treat it as task context, not policy.
+- `KNOWLEDGE.md` collects troubleshooting knowledge for BLE, bonding, build history, and flash-order issues; some details are machine-specific.
+- `bt-disconnect-error.md` contains the current Bluetooth disconnect investigation history and evidence.
+- `temporary_changes.md` tracks temporary diagnostic changes that should usually be reverted after debugging.
+- `docs/bug-deep-sleep-wake.md` documents the resolved deep-sleep wake bug, its root cause, and ruled-out approaches.
+
+### Topic-specific expert knowledge files
+- The repository contains expert-level knowledge files for specific topics. Do not read them by default for every task, but if the current task touches a topic covered by one of these files, you SHALL read the relevant file(s) before making recommendations, interpreting evidence, or changing code/config related to that topic.
+- Read `KNOWLEDGE.md` for BLE, bonding, build history, flash order, and machine-specific troubleshooting topics.
+- Read `bt-disconnect-error.md` for Bluetooth disconnect, reconnect storm, timeout, stuck-key, ETW, or host interoperability investigation work.
+- Read `temporary_changes.md` when working on diagnostics, USB logging, temporary overrides, or reversion of debug-only changes.
+- Read `docs/bug-deep-sleep-wake.md` when working on sleep, wake, poweroff, or related regressions.
+- If multiple expert knowledge files apply, read all relevant ones. Treat them as required topic context, not optional background.
+
+The following Markdown files are generally session-specific or archival and should not be treated as primary guidance unless the task explicitly calls for historical context: `STATUS.md`, `relevant-files-dirs.md`, `.opencode/plans/*.md`, and most of `bugs_to_fix.md`.
 
 ## Cursor and Copilot rules
 - No `.cursorrules` file was found.
@@ -22,7 +48,7 @@ Primary keyboard is Hillside View.
 - Typical build execution directory is `${ZMK_ROOT}/app`.
 - Python venv is expected at `${ZMK_ROOT}/.venv`.
 - Required tools: `west`, `yq`, and standard shell tools.
-- Upload helpers in Makefile assume Linux-style storage tooling (not available on Windows).
+- Upload helpers in Makefile assume Linux-style storage tooling.
 - Treat `C:\ncs\...` toolchain installs as immutable: do not run `pip install`, upgrade packages, or otherwise modify that environment.
 
 ## Build, lint, and test commands
@@ -30,29 +56,15 @@ There is no dedicated unit-test suite in this repo.
 There is no standalone lint pipeline in this repo.
 Validation is performed by building the relevant firmware target(s).
 
-### Windows build (primary workflow)
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-firmware.ps1 -Target left
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-firmware.ps1 -Target right
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-firmware.ps1 -Target both
-```
-Board qualifier: `nice_nano/nrf52840/zmk`. Shield compounds include `nice_view`.
-
-### Windows flash
-```powershell
-.venv-tools\Scripts\python.exe -I -m nordicsemi dfu serial -pkg scripts\hillside_view_left-nice_nano_nrf52840_zmk-zmk-dfu.zip -p COM27 -b 115200
-.venv-tools\Scripts\python.exe -I -m nordicsemi dfu serial -pkg scripts\hillside_view_right-nice_nano_nrf52840_zmk-zmk-dfu.zip -p COM6 -b 115200
-```
-Flash order: left first, then right. Boot order: left first, wait 5-10s, then right.
-
-### Setup commands (Linux/Makefile)
+### Setup commands
 - `make modules/setup ZMK_ROOT=~/path/to/zmk`
   - Clones external modules from `config/west.yml` into `./modules`.
 - `make list`
   - Prints all available build targets parsed from `build.yaml`.
 
-### Build commands (Linux/Makefile)
+### Build commands
 - Build all: `make all ZMK_ROOT=~/path/to/zmk`
+- Hillside group: `make hsv/all ZMK_ROOT=~/path/to/zmk`
 - Hillside left: `make hsv/left ZMK_ROOT=~/path/to/zmk`
 - Hillside right: `make hsv/right ZMK_ROOT=~/path/to/zmk`
 
@@ -65,10 +77,10 @@ Use a single target build as the equivalent of running one focused test:
 Run from `${ZMK_ROOT}/app` with venv activated:
 
 ```bash
-west build -p -d build/hsv/left -b nice_nano/nrf52840/zmk \
-  -- -DSHIELD="hillside_view_left nice_view" \
+west build -p -d build/hsv/left -b nice_nano \
+  -- -DSHIELD="hillside_view_left" \
      -DZMK_CONFIG=/abs/path/to/zmk-config/config \
-     -DZMK_EXTRA_MODULES="/abs/path/to/zmk-config/modules/prospector-zmk-module;/abs/path/to/zmk-config/modules/zmk-locales"
+     -DZMK_EXTRA_MODULES="/abs/path/to/zmk-config/modules/prospector-zmk-module"
 ```
 
 ### Lint/static checks
@@ -76,7 +88,7 @@ west build -p -d build/hsv/left -b nice_nano/nrf52840/zmk \
 - Treat successful `west build` as syntax/compat validation for DTS/keymap/Kconfig edits.
 - For YAML edits, optionally run a parse check with `yq`.
 
-### Upload commands (Linux/Makefile)
+### Upload commands
 - `make upload/hillside_view_left-nice_nano ZMK_ROOT=~/path/to/zmk`
 - `make upload/hillside_view_right-nice_nano ZMK_ROOT=~/path/to/zmk`
 
@@ -134,8 +146,8 @@ west build -p -d build/hsv/left -b nice_nano/nrf52840/zmk \
 
 ## Validation expectations
 - Keymap-only change: build at least the affected single target.
-- Overlay/dtsi change: build all affected variants (left + right).
-- Shared config change: build both left and right targets.
+- Overlay/dtsi change: build all affected variants for that keyboard.
+- Shared config change: build both Hillside targets.
 - Build matrix change: run `make list` and build new/changed target(s).
 
 ## Quick checklist for agents
