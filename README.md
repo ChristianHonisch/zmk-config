@@ -18,3 +18,7 @@ Layers: Base, Num-Sym, Nav, FKeys, Training.
 
 German (DE) locale keys via [zmk-locales](https://github.com/joelspadin/zmk-locales).
 Home-row mods using urob-style "timeless" hold-tap configuration.
+
+## License
+
+Original repository content is licensed under the MIT License. See `LICENSE` and `NOTICE.md` for upstream attributions.
