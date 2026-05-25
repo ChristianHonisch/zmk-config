@@ -192,8 +192,8 @@
             bindings = <
 &trans  &kp DE_CARET  &kp DE_ACUTE   &mod_bt        &kp DE_DQT  &kp DE_SQT                                                       &kp DE_DOT              &kp DE_N7          &kp DE_N8          &kp DE_N9          &kp DE_FSLH            &kp DE_BSLH
 &none         &hml LGUI DE_LBKT   &hml LALT DE_LBRC  &hml LSHFT DE_LPAR  &hml LCTRL DE_LT &kp DE_TILDE                                            &kp DE_COMMA              &hmr RCTRL DE_N4   &hmr RSHFT DE_N5   &hmr RALT DE_N6    &hmr RGUI DE_PLUS      &kp DE_PIPE
-&none         &kp DE_RBKT   &kp DE_RBRC   &kp DE_RPAR   &kp DE_GT     &kp DE_HASH                                                               &kp DE_N0              &kp DE_N1          &kp DE_N2          &kp DE_N3          &kp DE_ASTRK           &kp RETURN
-              &none         &none         &none         &none         &none             &none              &trans     &trans       &trans                &none
+&none         &kp DE_RBKT   &kp DE_RBRC   &kp DE_RPAR   &kp DE_GT     &kp DE_HASH                                                               &kp RETURN               &kp DE_N1          &kp DE_N2          &kp DE_N3          &kp DE_ASTRK           &kp RETURN
+              &none         &none         &none         &none         &none             &none              &trans     &trans       &trans                &kp DE_N0
             >;
         };
 
